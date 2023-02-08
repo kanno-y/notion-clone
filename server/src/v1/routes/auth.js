@@ -29,4 +29,17 @@ router.post(
   user.register
 );
 
+// ログイン用API
+router.post(
+  "/login",
+  body("username")
+    .isLength({ min: 8 })
+    .withMessage("ユーザー名は８文字以上である必要がある"),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("パスワードはは８文字以上である必要がある"),
+  validation.validate,
+  user.login
+);
+
 module.exports = router;
