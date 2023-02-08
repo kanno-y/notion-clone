@@ -6,6 +6,8 @@ const User = require("../models/user");
 const validation = require("../handlers/validation");
 const user = require("../controllers/user");
 
+const tokenhandler = require("../handlers/tokenHandler");
+
 // ユーザー新規登録API
 router.post(
   "/register",
@@ -41,5 +43,10 @@ router.post(
   validation.validate,
   user.login
 );
+
+// JWT認証API
+router.post("/verify-token", tokenhandler.verifyToken, (req, res) => {
+  return res.status(200).json({ user: req.user });
+});
 
 module.exports = router;
