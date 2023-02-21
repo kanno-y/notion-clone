@@ -4,14 +4,26 @@ import { LoadingButton } from "@mui/lab";
 import { Link } from "react-router-dom";
 
 export const Register = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // 入力欄の文字列を取得
+    const data = new FormData(e.target);
+    const username = data.get("username").trim();
+    const password = data.get("password").trim();
+    const confirmPassword = data.get("confirmPassword").trim();
+    console.log("username", username);
+    console.log("password", password);
+    console.log("confirmPassword", confirmPassword);
+  };
   return (
     <>
-      <Box component="form">
+      <Box component="form" onSubmit={handleSubmit}>
         <TextField
           fullWidth
           id="username"
           label="お名前"
           margin="normal"
+          name="username"
           required
         />
         <TextField
@@ -20,6 +32,7 @@ export const Register = () => {
           label="パスワード"
           margin="normal"
           type="password"
+          name="password"
           required
         />
         <TextField
@@ -28,6 +41,7 @@ export const Register = () => {
           label="確認用パスワード"
           margin="normal"
           type="confirmPassword"
+          name="confirmPassword"
           required
         />
         <LoadingButton
