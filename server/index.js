@@ -3,9 +3,16 @@ const mongoose = require("mongoose");
 const app = express(); // expressモジュールをインスタンス化してapp変数に代入
 const PORT = 5000;
 require("dotenv").config();
+const cors = require("cors");
 
+// アクセスを許可するオリジンを設定
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 app.use(express.json()); // jsonオブジェクトを認識させる
-app.use("/api/v1", require("./src/v1/routes/auth"));
+app.use("/api/v1", require("./src/v1/routes"));
 
 // DB接続
 try {

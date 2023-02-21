@@ -2,6 +2,7 @@ import { Box, Button, TextField } from "@mui/material";
 import React from "react";
 import { LoadingButton } from "@mui/lab";
 import { Link } from "react-router-dom";
+import authApi from "../api/authApi";
 
 export const Register = () => {
   const handleSubmit = async (e) => {
@@ -14,7 +15,22 @@ export const Register = () => {
     console.log("username", username);
     console.log("password", password);
     console.log("confirmPassword", confirmPassword);
+
+    // 新規登録APIを叩く
+    try {
+      const res = await authApi.register({
+        username,
+        password,
+        confirmPassword,
+      });
+      await console.log(res)
+      localStorage.setItem("token", res.token);
+      console.log("新規登録に成功しました。");
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   return (
     <>
       <Box component="form" onSubmit={handleSubmit}>
