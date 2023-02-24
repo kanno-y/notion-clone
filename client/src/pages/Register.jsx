@@ -8,6 +8,7 @@ export const Register = () => {
   const [usernameErrText, setUsernameErrText] = useState("");
   const [passwordErrText, setPasswordErrText] = useState("");
   const [confirmPasswordErrText, setConfirmPassowrdErrText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,6 +46,8 @@ export const Register = () => {
 
     if (error) return;
 
+    setLoading(true);
+
     // 新規登録APIを叩く
     try {
       const res = await authApi.register({
@@ -52,11 +55,24 @@ export const Register = () => {
         password,
         confirmPassword,
       });
-      await console.log(res);
+      setLoading(false);
       localStorage.setItem("token", res.token);
       console.log("新規登録に成功しました。");
     } catch (err) {
-      console.log(err);
+      const errors = err.data.errors;
+      console.log(errors);
+      errors.forEach((error) => {
+        if (error.param === "username") {
+          setUsernameErrText(error.msg);
+        }
+        if (error.param === "password") {
+          setPasswordErrText(error.msg);
+        }
+        if (error.param === "confirmPassword") {
+          setConfirmPassowrdErrText(error.msg);
+        }
+      });
+      setLoading(false);
     }
   };
 
@@ -71,6 +87,8 @@ export const Register = () => {
           name="username"
           required
           helperText={usernameErrText}
+          error={usernameErrText !== ""}
+          disabled={loading}
         />
         <TextField
           fullWidth
@@ -81,22 +99,26 @@ export const Register = () => {
           name="password"
           required
           helperText={passwordErrText}
+          error={passwordErrText !== ""}
+          disabled={loading}
         />
         <TextField
           fullWidth
           id="confirmPassword"
           label="確認用パスワード"
           margin="normal"
-          type="confirmPassword"
+          type="Password"
           name="confirmPassword"
           required
           helperText={confirmPasswordErrText}
+          error={confirmPasswordErrText !== ""}
+          disabled={loading}
         />
         <LoadingButton
           sx={{ mt: 3, mb: 2 }}
           fullWidth
           type="submit"
-          loading={false}
+          loading={loading}
           color="primary"
           variant="outlined"
         >
