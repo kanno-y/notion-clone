@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 // モデルの作成
-const memoSchema = new mongoose.Schema({
+const memoSchema = new Schema({
   user: {
-    type: Schema.types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },

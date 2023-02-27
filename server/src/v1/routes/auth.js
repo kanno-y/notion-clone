@@ -4,9 +4,9 @@ require("dotenv").config();
 
 const User = require("../models/user");
 const validation = require("../handlers/validation");
-const user = require("../controllers/user");
+const userController = require("../controllers/user");
 
-const tokenhandler = require("../handlers/tokenHandler");
+const tokenHandler = require("../handlers/tokenHandler");
 
 // ユーザー新規登録API
 router.post(
@@ -28,7 +28,7 @@ router.post(
     });
   }),
   validation.validate,
-  user.register
+  userController.register
 );
 
 // ログイン用API
@@ -41,11 +41,11 @@ router.post(
     .isLength({ min: 8 })
     .withMessage("パスワードはは８文字以上である必要がある"),
   validation.validate,
-  user.login
+  userController.login
 );
 
 // JWT認証API
-router.post("/verify-token", tokenhandler.verifyToken, (req, res) => {
+router.post("/verify-token", tokenHandler.verifyToken, (req, res) => {
   return res.status(200).json({ user: req.user });
 });
 
