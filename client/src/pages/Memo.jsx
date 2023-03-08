@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import { IconButton, TextField } from "@mui/material";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
@@ -7,19 +7,52 @@ import { useParams } from "react-router-dom";
 import memoApi from "../api/memoApi";
 
 const Memo = () => {
-  const { id } = useParams();
-  console.log(IDBCursorWithValue);
+  const { memoId } = useParams();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
   useEffect(() => {
     const getMemo = async () => {
       try {
-        const res = await memoApi.getOne(id);
+        const res = await memoApi.getOne(memoId);
         console.log(res);
+        setTitle(res.title);
+        setDescription(res.description);
       } catch (error) {
         alert(error);
       }
     };
     getMemo();
-  }, [id]);
+  }, [memoId]);
+
+  let timer;
+  const timeout = 500;
+
+  const updateTitle = async (e) => {
+    clearTimeout(timer);
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    timer = setTimeout(async () => {
+      try {
+        await memoApi.update(memoId, { title: newTitle });
+      } catch (error) {
+        console.log(error);
+      }
+    }, timeout);
+  };
+  const updateDescription = async (e) => {
+    clearTimeout(timer);
+    const newDescription = e.target.value;
+    setDescription(newDescription);
+    timer = setTimeout(async () => {
+      try {
+        await memoApi.update(memoId, { description: newDescription });
+      } catch (error) {
+        console.log(error);
+      }
+    }, timeout);
+  };
+
   return (
     <>
       <Box
@@ -38,6 +71,8 @@ const Memo = () => {
       </Box>
       <Box sx={{ padding: "10px 50px" }}>
         <TextField
+          onChange={updateTitle}
+          value={title}
           placeholder="無題"
           variant="outlined"
           fullWidth
@@ -48,6 +83,8 @@ const Memo = () => {
           }}
         />
         <TextField
+          onChange={updateDescription}
+          value={description}
           placeholder="追加"
           variant="outlined"
           fullWidth

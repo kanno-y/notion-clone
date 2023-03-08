@@ -26,7 +26,7 @@ function App() {
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Home />}></Route>
             <Route path="memo" element={<Home />}></Route>
-            <Route path="memo/:id" element={<Memo />}></Route>
+            <Route path="memo/:memoId" element={<Memo />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
