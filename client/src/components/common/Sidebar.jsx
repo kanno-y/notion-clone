@@ -28,11 +28,6 @@ const Sidebar = () => {
     navigate("/login");
   };
 
-  // const [selectedItemId, setSelectedItemId] = useState(null);
-  // const handleClick = (id) => {
-  //   setSelectedItemId(id);
-  // };
-
   useEffect(() => {
     const getMemos = async () => {
       try {
@@ -46,10 +41,20 @@ const Sidebar = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const activeIndex = memos.findIndex((e) => e._id === params.id);
+    const activeIndex = memos.findIndex((e) => e._id === params.memoId);
     setActiveIndex(activeIndex);
-  }, [navigate]);
+  }, [navigate, memos, params.memoId]);
 
+  const addMemo = async () => {
+    try {
+      const res = await memoApi.create();
+      const newMemos = [res, ...memos];
+      dispatch(setMemo(newMemos));
+      navigate(`memo/${res._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Drawer
       container={window.document.body}
@@ -109,7 +114,7 @@ const Sidebar = () => {
             <Typography variant="body2" fontWeight="700">
               プライベート
             </Typography>
-            <IconButton aria-label="" onClick={() => {}}>
+            <IconButton aria-label="" onClick={() => addMemo()}>
               <AddBoxOutlinedIcon fontSize="small" />
             </IconButton>
           </Box>
